@@ -63,4 +63,12 @@ function hitTarget(el) {
   score++;
   document.getElementById("score").innerText = score;
   el.parentNode.removeChild(el);
+
+   // Treffer-Sound abspielen
+    const popSound = document.getElementById('pop-sound');
+    popSound.currentTime = 0;  // Setzt den Sound immer zurück
+    popSound.play();
+
+    target.parentNode.removeChild(target);
 }
+
