@@ -1,4 +1,4 @@
-const gameDuration = 25; // Spielzeit in Sekunden
+const gameDuration = 25;
 let score = 0;
 let timeLeft = gameDuration;
 let spawnInterval;
@@ -37,38 +37,37 @@ function updateTimer() {
 
 function spawnTarget() {
   const target = document.createElement("a-sphere");
-  target.setAttribute("radius", 0.2);
-  target.setAttribute("color", "#F00");
+  target.setAttribute("radius", 0.3);
+  target.setAttribute("color", "#FF0000");
 
   const posX = (Math.random() - 0.5) * 4;
   const posY = Math.random() * 2 + 1;
-  const posZ = -3 - Math.random() * 3;
+  const posZ = -3 - Math.random() * 2;
   target.setAttribute("position", `${posX} ${posY} ${posZ}`);
 
-  // Interaktion
   target.setAttribute("class", "clickable");
-  target.setAttribute("event-set__enter", "_event: mouseenter; color: #0F0");
-  target.setAttribute("event-set__leave", "_event: mouseleave; color: #F00");
-  target.setAttribute("onclick", "hitTarget(this)");
+  target.setAttribute("event-set__enter", "_event: mouseenter; color: #00FF00");
+  target.setAttribute("event-set__leave", "_event: mouseleave; color: #FF0000");
+  target.addEventListener("click", () => hitTarget(target));
 
   document.getElementById("targetContainer").appendChild(target);
 
-  // Target verschwindet nach 2 Sekunden
+  // Entferne Ziel nach 3 Sekunden, wenn nicht getroffen
   setTimeout(() => {
     if (target.parentNode) target.remove();
-  }, 2000);
+  }, 3000);
 }
 
 function hitTarget(el) {
   score++;
   document.getElementById("score").innerText = score;
-  el.parentNode.removeChild(el);
+  el.remove();
 
-   // Treffer-Sound abspielen
-    const popSound = document.getElementById('pop-sound');
-    popSound.currentTime = 0;  // Setzt den Sound immer zurück
+  const popSound = document.getElementById("pop-sound");
+  if (popSound) {
+    popSound.currentTime = 0;
     popSound.play();
+  }
 
-    target.parentNode.removeChild(target);
+  if (navigator.vibrate) navigator.vibrate(100);
 }
-
