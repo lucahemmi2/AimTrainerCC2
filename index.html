@@ -24,15 +24,13 @@
   <a-scene>
     <a-assets>
       <img id="panelTexture" src="assets/portal.png">
-    </a-assets>
-
-    <!-- Audio -->
-    <a-assets>
       <audio id="pop-sound" src="./assets/sharp-pop-328170.mp3"></audio>
     </a-assets>
 
+
+
     <!-- Umgebung -->
-    <a-entity environment="preset: forest; ground: noise; groundColor: #444; dressingAmount: 250;"></a-entity>
+    <a-entity environment="preset: forest; ground: noise; groundColor: #444; dressingAmount: 750;"></a-entity>
     <a-entity light="type: ambient; intensity: 0.8;"></a-entity>
     <a-entity light="type: directional; intensity: 0.2;" position="2 5 -3"></a-entity>
 
@@ -102,11 +100,13 @@
     <!-- Portal -->
     <a-box width="1" height="6" depth="1.5" color="#222" transparent="true" position="1.8 3 14.25"></a-box>
     <a-box width="1" height="6" depth="1.5" color="#222" transparent="true" position="-1.8 3 14.25"></a-box>
-    <a-box width="4" height="1" depth="1.5" color="#222" transparent="true" position="0 5.5 14.25" ></a-box>a-box>
-    <a-box width="2" height="2" depth="0.2" src="#panelTexture" transparent="true" position="0 2 12"></a-plane>
-      <a-box width="2" height="2" depth="0.2" src="#panelTexture" transparent="true" position="0 2 0-5"></a-plane>
+    <a-box width="4" height="1" depth="1.5" color="#222" transparent="true" position="0 5.5 14.25"></a-box>a-box>
+    <a-box class="portalStarry menu-clickable" width="3" height="3" depth="0.2" src="#panelTexture"
+      transparent="true" position="0 1.5 14.25"></a-box>
+    <a-box class="portalStarry menu-clickable" width="3" height="3" depth="0.2" src="#panelTexture"
+      transparent="true" position="0 3.5 14.25"></a-box>
 
-        <script src="script.js"></script>
+    <script src="script.js"></script>
   </a-scene>
 </body>
 
