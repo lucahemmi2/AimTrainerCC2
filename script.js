@@ -3,46 +3,56 @@ let score = 0;
 let timeLeft = gameDuration;
 let spawnInterval;
 let timerInterval;
+let sessionHighscore = 0;
 
-let currentMenuIntersected = null;
-
-AFRAME.registerComponent('custom-raycaster', {
-  init: function () {
-    const cursor = this.el;
-
-    cursor.addEventListener('raycaster-intersection', e => {
-      currentMenuIntersected = null;
-      e.detail.els.forEach(el => {
-        if (el.classList.contains('menu-clickable')) {
-          currentMenuIntersected = el;
-        }
-      });
-    });
-
-    cursor.addEventListener('raycaster-intersection-cleared', () => {
-      currentMenuIntersected = null;
-    });
-
-    cursor.addEventListener('click', evt => {
-      const intersection = evt.detail.intersectedEl;
-      if (intersection && intersection.classList.contains('target-clickable')) {
-        intersection.emit('click'); // Fuse feuert Click
-      }
-    });
-  }
-});
 
 window.addEventListener("DOMContentLoaded", () => {
-  document.querySelector("#btn-easy").addEventListener("click", () => startGame("easy"));
-  document.querySelector("#btn-medium").addEventListener("click", () => startGame("medium"));
-  document.querySelector("#btn-hard").addEventListener("click", () => startGame("hard"));
-  document.querySelector("#btn-restart").addEventListener("click", () => restartGame());
-});
+  const menuCursor = document.querySelector("#menuCursor");
+  const targetCursor = document.querySelector("#targetCursor");
 
-window.addEventListener("touchstart", () => {
-  if (currentMenuIntersected) {
-    currentMenuIntersected.emit('click');
-  }
+  // Alle Menüpunkte vorbereiten
+  const menuButtons = document.querySelectorAll(".menu-clickable");
+  let currentMenuTarget = null;
+
+  // Tracke, worauf der Menü-Cursor zeigt
+  menuCursor.addEventListener("mouseenter", (evt) => {
+    currentMenuTarget = evt.target;
+    console.log("Menü-Cursor zeigt auf:", currentMenuTarget.id);
+  });
+  menuCursor.addEventListener("mouseleave", () => {
+    currentMenuTarget = null;
+  });
+
+  // Auf Touch reagieren
+  window.addEventListener("touchstart", () => {
+    if (currentMenuTarget) {
+      console.log("Menü-Click per Touch:", currentMenuTarget.id);
+      currentMenuTarget.emit("click");
+    }
+  });
+
+  // Schwierigkeits-Buttons starten das Spiel
+  document.querySelector("#btn-easy").addEventListener("click", () => {
+    console.log("Easy gestartet");
+    startGame("easy");
+  });
+  document.querySelector("#btn-medium").addEventListener("click", () => {
+    console.log("Medium gestartet");
+    startGame("medium");
+  });
+  document.querySelector("#btn-hard").addEventListener("click", () => {
+    console.log("Hard gestartet");
+    startGame("hard");
+  });
+  document.querySelector("#btn-restart").addEventListener("click", () => {
+    console.log("Restart gedrückt");
+    restartGame();
+  });
+
+  // Treffer-Log fürs Target-Cursor
+  targetCursor.addEventListener("click", (evt) => {
+    console.log("Target-Cursor Click:", evt.target);
+  });
 });
 
 function startGame(difficulty) {
@@ -76,17 +86,27 @@ function updateTimer() {
   }
 }
 
+function updateHighscoreUI() {
+  document.querySelector("#highscoreText").setAttribute(
+    "value",
+    `Highscore: ${sessionHighscore}`
+  );
+}
+
+
 function endGame() {
   hideElement("#scoreboard");
   showElement("#endScreen");
+  document.querySelector("#endText").setAttribute("value", `Zeit abgelaufen!\nTreffer: ${score}`);
 
-  document.querySelector("#endText").setAttribute(
-    "value",
-    `Zeit abgelaufen!\nTreffer: ${score}`
-  );
+  if (score > sessionHighscore) {
+    sessionHighscore = score;
+  }
+  updateHighscoreUI();
 
   document.getElementById("targetContainer").innerHTML = "";
 }
+
 
 function restartGame() {
   hideElement("#endScreen");
@@ -119,27 +139,22 @@ function hitTarget(el) {
   score++;
   updateScoreUI();
   el.remove();
+  console.log("Target getroffen!");
 
   const popSound = document.getElementById("pop-sound");
   if (popSound) {
     popSound.currentTime = 0;
     popSound.play();
-    if (navigator.vibrate) navigator.vibrate(100);
+    if (navigator.vibrate) navigator.vibrate(30);
   }
 }
 
 function updateScoreUI() {
-  document.querySelector("#scoreText").setAttribute(
-    "value",
-    `Treffer: ${score}`
-  );
+  document.querySelector("#scoreText").setAttribute("value", `Treffer: ${score}`);
 }
 
 function updateTimeUI() {
-  document.querySelector("#timeText").setAttribute(
-    "value",
-    `Zeit: ${timeLeft}s`
-  );
+  document.querySelector("#timeText").setAttribute("value", `Zeit: ${timeLeft}s`);
 }
 
 function showElement(selector) {
