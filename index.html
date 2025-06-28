@@ -48,6 +48,7 @@
     <!-- Ziel-Container -->
     <a-entity id="targetContainer"></a-entity>
 
+    <!-- Menü -->
     <a-entity id="menu" position="-4 4 5" rotation="0 90 0">
       <a-text value="Wähle Schwierigkeitsgrad:" align="center" position="0 0.5 0" color="#FFF"></a-text>
 
@@ -72,17 +73,7 @@
       <a-text id="endText" value="Zeit abgelaufen!" align="center" position="0 0.4 0" rotation="0 90 0"
         color="white"></a-text>
 
-      <a-plane id="btn-restart" class="clickable" color="#444" width="1.5" height="0.4" position="0 -0.2 0"
-        event-set__enter="_event: mouseenter; color: #666" event-set__leave="_event: mouseleave; color: #444">
-        <a-text value="Nochmal spielen" align="center" position="0 0 0.01" color="#FFF"></a-text>
-      </a-plane>
-    </a-entity>
-    <!-- Endbildschirm (noch weiter links) -->
-    <a-entity id="endScreen" position="-3 3 5" rotation="0 90 0" visible="false">
-      <a-text id="endText" value="Zeit abgelaufen!" align="center" position="0 0.4 0" rotation="0 90 0"
-        color="white"></a-text>
-
-      <a-plane id="restartButton" class="clickable" color="#444" width="1.5" height="0.4" position="0 -0.2 0"
+      <a-plane id="btn-restart" color="#444" width="1.5" height="0.4" position="0 -0.2 0"
         event-set__enter="_event: mouseenter; color: #666" event-set__leave="_event: mouseleave; color: #444">
         <a-text value="Nochmal spielen" align="center" position="0 0 0.01" color="#FFF"></a-text>
       </a-plane>

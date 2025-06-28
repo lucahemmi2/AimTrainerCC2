@@ -5,12 +5,9 @@ let spawnInterval;
 let timerInterval;
 
 window.addEventListener("DOMContentLoaded", () => {
-  // Schwierigkeits-Buttons
   document.querySelector("#btn-easy").addEventListener("click", () => startGame("easy"));
   document.querySelector("#btn-medium").addEventListener("click", () => startGame("medium"));
   document.querySelector("#btn-hard").addEventListener("click", () => startGame("hard"));
-
-  // Restart-Button
   document.querySelector("#btn-restart").addEventListener("click", () => restartGame());
 });
 
@@ -48,14 +45,25 @@ function updateTimer() {
 function endGame() {
   hideElement("#scoreboard");
 
-  showElement("#endScreen");
-  document.querySelector("#endText").setAttribute("value", `Zeit abgelaufen!\nTreffer: ${score}`);
+  // Endscreen anzeigen + Restart-Button aktivieren
+  const endScreen = document.querySelector("#endScreen");
+  endScreen.setAttribute("visible", "true");
+  document.querySelector("#btn-restart").classList.add("clickable");
+
+  document.querySelector("#endText").setAttribute(
+    "value",
+    `Zeit abgelaufen!\nTreffer: ${score}`
+  );
+
   document.getElementById("targetContainer").innerHTML = "";
 }
 
 function restartGame() {
   hideElement("#endScreen");
   showElement("#menu");
+
+  // Restart-Button deaktivieren
+  document.querySelector("#btn-restart").classList.remove("clickable");
 }
 
 function spawnTarget() {
@@ -94,22 +102,37 @@ function hitTarget(el) {
 }
 
 function updateScoreUI() {
-  document.querySelector("#scoreText").setAttribute("value", `Treffer: ${score}`);
+  document.querySelector("#scoreText").setAttribute(
+    "value",
+    `Treffer: ${score}`
+  );
 }
 
 function updateTimeUI() {
-  document.querySelector("#timeText").setAttribute("value", `Zeit: ${timeLeft}s`);
+  document.querySelector("#timeText").setAttribute(
+    "value",
+    `Zeit: ${timeLeft}s`
+  );
 }
 
-// Sichtbarkeit
 function showElement(selector) {
   const el = document.querySelector(selector);
   el.setAttribute("visible", "true");
-  el.querySelectorAll(".clickable").forEach(c => c.classList.add("clickable"));
+
+  if (selector === "#menu") {
+    el.querySelectorAll("a-plane").forEach(b => b.classList.add("clickable"));
+  } else {
+    el.querySelectorAll(".clickable").forEach(c => c.classList.add("clickable"));
+  }
 }
 
 function hideElement(selector) {
   const el = document.querySelector(selector);
   el.setAttribute("visible", "false");
-  el.querySelectorAll(".clickable").forEach(c => c.classList.remove("clickable"));
+
+  if (selector === "#menu") {
+    el.querySelectorAll("a-plane").forEach(b => b.classList.remove("clickable"));
+  } else {
+    el.querySelectorAll(".clickable").forEach(c => c.classList.remove("clickable"));
+  }
 }
