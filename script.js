@@ -4,11 +4,41 @@ let timeLeft = gameDuration;
 let spawnInterval;
 let timerInterval;
 
+// Speichert, ob Cursor gerade über einem Menü-Button ist
+let currentMenuIntersected = null;
+
+// Raycaster-Komponente registrieren
+AFRAME.registerComponent('custom-raycaster', {
+  init: function () {
+    const cursor = this.el;
+
+    cursor.addEventListener('raycaster-intersection', e => {
+      currentMenuIntersected = null;
+      e.detail.els.forEach(el => {
+        if (el.classList.contains('menu-clickable')) {
+          currentMenuIntersected = el;
+        }
+      });
+    });
+
+    cursor.addEventListener('raycaster-intersection-cleared', e => {
+      currentMenuIntersected = null;
+    });
+  }
+});
+
 window.addEventListener("DOMContentLoaded", () => {
   document.querySelector("#btn-easy").addEventListener("click", () => startGame("easy"));
   document.querySelector("#btn-medium").addEventListener("click", () => startGame("medium"));
   document.querySelector("#btn-hard").addEventListener("click", () => startGame("hard"));
   document.querySelector("#btn-restart").addEventListener("click", () => restartGame());
+});
+
+// Cardboard Touch-Trigger
+window.addEventListener("touchstart", () => {
+  if (currentMenuIntersected) {
+    currentMenuIntersected.emit('click');
+  }
 });
 
 function startGame(difficulty) {
@@ -44,11 +74,7 @@ function updateTimer() {
 
 function endGame() {
   hideElement("#scoreboard");
-
-  // Endscreen anzeigen + Restart-Button aktivieren
-  const endScreen = document.querySelector("#endScreen");
-  endScreen.setAttribute("visible", "true");
-  document.querySelector("#btn-restart").classList.add("clickable");
+  showElement("#endScreen");
 
   document.querySelector("#endText").setAttribute(
     "value",
@@ -61,9 +87,6 @@ function endGame() {
 function restartGame() {
   hideElement("#endScreen");
   showElement("#menu");
-
-  // Restart-Button deaktivieren
-  document.querySelector("#btn-restart").classList.remove("clickable");
 }
 
 function spawnTarget() {
@@ -76,7 +99,7 @@ function spawnTarget() {
   const posZ = -3 - Math.random() * 2;
   target.setAttribute("position", `${posX} ${posY} ${posZ}`);
 
-  target.setAttribute("class", "clickable");
+  target.setAttribute("class", "target-clickable");
   target.setAttribute("event-set__enter", "_event: mouseenter; color: #00FF00");
   target.setAttribute("event-set__leave", "_event: mouseleave; color: #FF0000");
 
@@ -118,21 +141,9 @@ function updateTimeUI() {
 function showElement(selector) {
   const el = document.querySelector(selector);
   el.setAttribute("visible", "true");
-
-  if (selector === "#menu") {
-    el.querySelectorAll("a-plane").forEach(b => b.classList.add("clickable"));
-  } else {
-    el.querySelectorAll(".clickable").forEach(c => c.classList.add("clickable"));
-  }
 }
 
 function hideElement(selector) {
   const el = document.querySelector(selector);
   el.setAttribute("visible", "false");
-
-  if (selector === "#menu") {
-    el.querySelectorAll("a-plane").forEach(b => b.classList.remove("clickable"));
-  } else {
-    el.querySelectorAll(".clickable").forEach(c => c.classList.remove("clickable"));
-  }
 }

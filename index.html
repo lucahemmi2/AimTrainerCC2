@@ -6,8 +6,7 @@
   <title>VR Aim Trainer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/aframe-environment-component@1.3.1/dist/aframe-environment-component.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aframe-environment-component@1.3.1/dist/aframe-environment-component.min.js"></script>
   <link rel="stylesheet" href="style.css" />
   <style>
     html,
@@ -35,7 +34,11 @@
     <!-- Kamera + Score UI -->
     <a-entity position="0 3 5">
       <a-camera>
-        <a-cursor fuse="true" fuse-timeout="50" color="#FF0000" raycaster="objects: .clickable"></a-cursor>
+        <!-- Neuer Cursor mit beiden Interaktionsarten -->
+        <a-cursor id="gazeCursor" fuse="true" fuse-timeout="500" color="#FF0000"
+          raycaster="objects: .target-clickable, .menu-clickable"
+          custom-raycaster>
+        </a-cursor>
 
         <!-- Scoreboard (HUD) -->
         <a-entity id="scoreboard" position="0 -0.3 -1" visible="false">
@@ -52,17 +55,17 @@
     <a-entity id="menu" position="-4 4 5" rotation="0 90 0">
       <a-text value="Wähle Schwierigkeitsgrad:" align="center" position="0 0.5 0" color="#FFF"></a-text>
 
-      <a-plane id="btn-easy" class="clickable" color="#444" width="1.2" height="0.3" position="0 0.2 0"
+      <a-plane id="btn-easy" class="menu-clickable" color="#444" width="1.2" height="0.3" position="0 0.2 0"
         event-set__enter="_event: mouseenter; color: #666" event-set__leave="_event: mouseleave; color: #444">
         <a-text value="Einfach" align="center" position="0 0 0.01" color="#FFF"></a-text>
       </a-plane>
 
-      <a-plane id="btn-medium" class="clickable" color="#444" width="1.2" height="0.3" position="0 -0.2 0"
+      <a-plane id="btn-medium" class="menu-clickable" color="#444" width="1.2" height="0.3" position="0 -0.2 0"
         event-set__enter="_event: mouseenter; color: #666" event-set__leave="_event: mouseleave; color: #444">
         <a-text value="Mittel" align="center" position="0 0 0.01" color="#FFF"></a-text>
       </a-plane>
 
-      <a-plane id="btn-hard" class="clickable" color="#444" width="1.2" height="0.3" position="0 -0.6 0"
+      <a-plane id="btn-hard" class="menu-clickable" color="#444" width="1.2" height="0.3" position="0 -0.6 0"
         event-set__enter="_event: mouseenter; color: #666" event-set__leave="_event: mouseleave; color: #444">
         <a-text value="Schwer" align="center" position="0 0 0.01" color="#FFF"></a-text>
       </a-plane>
@@ -73,7 +76,7 @@
       <a-text id="endText" value="Zeit abgelaufen!" align="center" position="0 0.4 0" rotation="0 90 0"
         color="white"></a-text>
 
-      <a-plane id="btn-restart" color="#444" width="1.5" height="0.4" position="0 -0.2 0"
+      <a-plane id="btn-restart" class="menu-clickable" color="#444" width="1.5" height="0.4" position="0 -0.2 0"
         event-set__enter="_event: mouseenter; color: #666" event-set__leave="_event: mouseleave; color: #444">
         <a-text value="Nochmal spielen" align="center" position="0 0 0.01" color="#FFF"></a-text>
       </a-plane>
