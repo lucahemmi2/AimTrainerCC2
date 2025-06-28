@@ -7,7 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-environment-component@1.3.1/dist/aframe-environment-component.min.js"></script>
-  <link rel="stylesheet" href="style.css" />
   <style>
     html,
     body {
@@ -21,37 +20,28 @@
 
 <body>
   <a-scene>
-    <!-- Audio -->
     <a-assets>
       <audio id="pop-sound" src="./sounds/sharp-pop-328170.mp3"></audio>
     </a-assets>
 
-    <!-- Umgebung -->
     <a-entity environment="preset: forest; ground: noise; groundColor: #444; dressingAmount: 2500;"></a-entity>
     <a-entity light="type: ambient; intensity: 0.8;"></a-entity>
     <a-entity light="type: directional; intensity: 0.2;" position="2 5 -3"></a-entity>
 
-    <!-- Kamera + Score UI -->
     <a-entity position="0 3 5">
       <a-camera>
-        <!-- Neuer Cursor mit beiden Interaktionsarten -->
-        <a-cursor id="gazeCursor" fuse="true" fuse-timeout="500" color="#FF0000"
-          raycaster="objects: .target-clickable, .menu-clickable"
-          custom-raycaster>
-        </a-cursor>
+        <a-cursor id="gazeCursor" fuse="true" fuse-timeout="100" color="#FF0000"
+          raycaster="objects: .target-clickable, .menu-clickable"></a-cursor>
 
-        <!-- Scoreboard (HUD) -->
-        <a-entity id="scoreboard" position="0 -0.3 -1" visible="false">
+        <a-entity id="scoreboard" position="0 -0.3 -1.5" visible="false">
           <a-text id="scoreText" value="Treffer: 0" position="0 0.1 0" color="white" align="center"></a-text>
           <a-text id="timeText" value="Zeit: 25s" position="0 -0.1 0" color="white" align="center"></a-text>
         </a-entity>
       </a-camera>
     </a-entity>
 
-    <!-- Ziel-Container -->
     <a-entity id="targetContainer"></a-entity>
 
-    <!-- Menü -->
     <a-entity id="menu" position="-4 4 5" rotation="0 90 0">
       <a-text value="Wähle Schwierigkeitsgrad:" align="center" position="0 0.5 0" color="#FFF"></a-text>
 
@@ -71,7 +61,6 @@
       </a-plane>
     </a-entity>
 
-    <!-- Endbildschirm -->
     <a-entity id="endScreen" position="-3 3 5" rotation="0 90 0" visible="false">
       <a-text id="endText" value="Zeit abgelaufen!" align="center" position="0 0.4 0" rotation="0 90 0"
         color="white"></a-text>

@@ -4,10 +4,8 @@ let timeLeft = gameDuration;
 let spawnInterval;
 let timerInterval;
 
-// Speichert, ob Cursor gerade über einem Menü-Button ist
 let currentMenuIntersected = null;
 
-// Raycaster-Komponente registrieren
 AFRAME.registerComponent('custom-raycaster', {
   init: function () {
     const cursor = this.el;
@@ -21,8 +19,15 @@ AFRAME.registerComponent('custom-raycaster', {
       });
     });
 
-    cursor.addEventListener('raycaster-intersection-cleared', e => {
+    cursor.addEventListener('raycaster-intersection-cleared', () => {
       currentMenuIntersected = null;
+    });
+
+    cursor.addEventListener('click', evt => {
+      const intersection = evt.detail.intersectedEl;
+      if (intersection && intersection.classList.contains('target-clickable')) {
+        intersection.emit('click'); // Fuse feuert Click
+      }
     });
   }
 });
@@ -34,7 +39,6 @@ window.addEventListener("DOMContentLoaded", () => {
   document.querySelector("#btn-restart").addEventListener("click", () => restartGame());
 });
 
-// Cardboard Touch-Trigger
 window.addEventListener("touchstart", () => {
   if (currentMenuIntersected) {
     currentMenuIntersected.emit('click');
