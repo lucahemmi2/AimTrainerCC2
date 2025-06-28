@@ -1,4 +1,4 @@
-const gameDuration = 25;
+const gameDuration = 5;
 let score = 0;
 let timeLeft = gameDuration;
 let spawnInterval;
@@ -11,10 +11,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
   let currentMenuTarget = null;
 
-  // Alle Menüpunkte + Portale: Markiere Portale mit .menu-clickable UND spezifischer Klasse
   const menuButtons = document.querySelectorAll(".menu-clickable");
 
-  // Menü-Cursor Gaze Tracking
   menuCursor.addEventListener("mouseenter", (evt) => {
     currentMenuTarget = evt.target;
     console.log("Gaze ENTER:", currentMenuTarget.id || currentMenuTarget.className);
@@ -24,7 +22,6 @@ window.addEventListener("DOMContentLoaded", () => {
     currentMenuTarget = null;
   });
 
-  // TOUCH auf Screen -> feuert Click-Event am aktuellen Target
   window.addEventListener("touchstart", () => {
     if (currentMenuTarget) {
       console.log("Touchstart -> emit Click:", currentMenuTarget.id || currentMenuTarget.className);
@@ -32,7 +29,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Fallback: ECHTER Click auf Fläche selbst
   menuButtons.forEach(el => {
     el.addEventListener("click", () => {
       console.log("Direkter Click auf:", el.id || el.className);
@@ -40,28 +36,65 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Schwierigkeits-Buttons
   document.querySelector("#btn-easy").addEventListener("click", () => startGame("easy"));
   document.querySelector("#btn-medium").addEventListener("click", () => startGame("medium"));
   document.querySelector("#btn-hard").addEventListener("click", () => startGame("hard"));
   document.querySelector("#btn-restart").addEventListener("click", restartGame);
 
-  // Treffer mit Ziel-Cursor
   targetCursor.addEventListener("click", (evt) => {
     console.log("Target-Cursor Click:", evt.target);
   });
 
-  // Portale Click-Handler
   function handleMenuClick(el) {
     if (el.classList.contains("portalStarry")) {
-      window.location.href = "undex.html";
+      switchEnvironment("starry");
     }
     if (el.classList.contains("portalForrest")) {
-      window.location.href = "index.html";
+      switchEnvironment("forest");
     }
   }
 
-  // Spiel Logik
+function switchEnvironment(target) {
+  const env = document.getElementById("environment");
+  const portalsStarry = document.querySelectorAll(".portalStarry");
+  const portalsForrest = document.querySelectorAll(".portalForrest");
+  const forestObjects = document.getElementById("forestObjects");
+  const starryObjects = document.getElementById("starryObjects");
+
+  if (target === "starry") {
+    env.setAttribute("environment", "preset: starry; ground: noise; groundColor: #444; dressingAmount: 750;");
+    portalsStarry.forEach(p => {
+      p.setAttribute("visible", "false");
+      p.classList.remove("menu-clickable");
+    });
+    portalsForrest.forEach(p => {
+      p.setAttribute("visible", "true");
+      p.classList.add("menu-clickable");
+    });
+
+    // Starry Objekte AN, Forest AUS
+    forestObjects.setAttribute("visible", "false");
+    starryObjects.setAttribute("visible", "true");
+
+  } else if (target === "forest") {
+    env.setAttribute("environment", "preset: forest; ground: noise; groundColor: #444; dressingAmount: 750;");
+    portalsStarry.forEach(p => {
+      p.setAttribute("visible", "true");
+      p.classList.add("menu-clickable");
+    });
+    portalsForrest.forEach(p => {
+      p.setAttribute("visible", "false");
+      p.classList.remove("menu-clickable");
+    });
+
+    // Starry Objekte AUS, Forest AN
+    forestObjects.setAttribute("visible", "true");
+    starryObjects.setAttribute("visible", "false");
+  }
+}
+
+
+
   function startGame(difficulty) {
     score = 0;
     timeLeft = gameDuration;
