@@ -9,90 +9,64 @@ window.addEventListener("DOMContentLoaded", () => {
   const menuCursor = document.querySelector("#menuCursor");
   const targetCursor = document.querySelector("#targetCursor");
 
-  // Alle Menüpunkte vorbereiten
-  const menuButtons = document.querySelectorAll(".menu-clickable");
   let currentMenuTarget = null;
 
-  // Tracke, worauf der Menü-Cursor zeigt
+  // Alle Menüpunkte + Portale: Markiere Portale mit .menu-clickable UND spezifischer Klasse
+  const menuButtons = document.querySelectorAll(".menu-clickable");
+
+  // Menü-Cursor Gaze Tracking
   menuCursor.addEventListener("mouseenter", (evt) => {
     currentMenuTarget = evt.target;
-    console.log("Menü-Cursor zeigt auf:", currentMenuTarget.id);
+    console.log("Gaze ENTER:", currentMenuTarget.id || currentMenuTarget.className);
   });
   menuCursor.addEventListener("mouseleave", () => {
+    console.log("Gaze LEAVE");
     currentMenuTarget = null;
   });
 
-  // Auf Touch reagieren
+  // TOUCH auf Screen -> feuert Click-Event am aktuellen Target
   window.addEventListener("touchstart", () => {
     if (currentMenuTarget) {
-      console.log("Menü-Click per Touch:", currentMenuTarget.id);
+      console.log("Touchstart -> emit Click:", currentMenuTarget.id || currentMenuTarget.className);
       currentMenuTarget.emit("click");
     }
   });
 
-  // Schwierigkeits-Buttons starten das Spiel
-  document.querySelector("#btn-easy").addEventListener("click", () => {
-    console.log("Easy gestartet");
-    startGame("easy");
-  });
-  document.querySelector("#btn-medium").addEventListener("click", () => {
-    console.log("Medium gestartet");
-    startGame("medium");
-  });
-  document.querySelector("#btn-hard").addEventListener("click", () => {
-    console.log("Hard gestartet");
-    startGame("hard");
-  });
-  document.querySelector("#btn-restart").addEventListener("click", () => {
-    console.log("Restart gedrückt");
-    restartGame();
-  });
-
-  document.querySelectorAll(".menu-clickable").forEach(el => {
-    el.addEventListener("click", (evt) => {
+  // Fallback: ECHTER Click auf Fläche selbst
+  menuButtons.forEach(el => {
+    el.addEventListener("click", () => {
       console.log("Direkter Click auf:", el.id || el.className);
-      if (el.classList.contains("portalStarry")) {
-        window.location.href = "starry.html";
-      }
-      if (el.classList.contains("portalForrest")) {
-        window.location.href = "index.html";
-      }
+      handleMenuClick(el);
     });
   });
 
+  // Schwierigkeits-Buttons
+  document.querySelector("#btn-easy").addEventListener("click", () => startGame("easy"));
+  document.querySelector("#btn-medium").addEventListener("click", () => startGame("medium"));
+  document.querySelector("#btn-hard").addEventListener("click", () => startGame("hard"));
+  document.querySelector("#btn-restart").addEventListener("click", restartGame);
 
-  // Treffer-Log fürs Target-Cursor
+  // Treffer mit Ziel-Cursor
   targetCursor.addEventListener("click", (evt) => {
     console.log("Target-Cursor Click:", evt.target);
   });
 
-  // ✅ Portale richtig behandeln
-  const portalsStarry = document.querySelectorAll(".portalStarry");
-  portalsStarry.forEach(portal => {
-    portal.addEventListener("click", () => {
-      console.log("Wechsle zu Nachthimmel");
+  // Portale Click-Handler
+  function handleMenuClick(el) {
+    if (el.classList.contains("portalStarry")) {
       window.location.href = "undex.html";
-    });
-  });
-
-  const portalsForrest = document.querySelectorAll(".portalForrest");
-  portalsForrest.forEach(portal => {
-    portal.addEventListener("click", () => {
-      console.log("Wechsle zu Wald");
+    }
+    if (el.classList.contains("portalForrest")) {
       window.location.href = "index.html";
-    });
-  });
+    }
+  }
 
-  // ------------------------------
-  // AB HIER bleibt alles wie gehabt
-  // ------------------------------
-
+  // Spiel Logik
   function startGame(difficulty) {
     score = 0;
     timeLeft = gameDuration;
     updateScoreUI();
     updateTimeUI();
-
     hideElement("#menu");
     hideElement("#endScreen");
     showElement("#scoreboard");
@@ -110,7 +84,6 @@ window.addEventListener("DOMContentLoaded", () => {
   function updateTimer() {
     timeLeft--;
     updateTimeUI();
-
     if (timeLeft <= 0) {
       clearInterval(spawnInterval);
       clearInterval(timerInterval);
@@ -128,16 +101,9 @@ window.addEventListener("DOMContentLoaded", () => {
   function endGame() {
     hideElement("#scoreboard");
     showElement("#endScreen");
-    document.querySelector("#endText").setAttribute(
-      "value",
-      `Zeit abgelaufen!\nTreffer: ${score}`
-    );
-
-    if (score > sessionHighscore) {
-      sessionHighscore = score;
-    }
+    document.querySelector("#endText").setAttribute("value", `Zeit abgelaufen!\nTreffer: ${score}`);
+    if (score > sessionHighscore) sessionHighscore = score;
     updateHighscoreUI();
-
     document.getElementById("targetContainer").innerHTML = "";
   }
 
@@ -150,25 +116,16 @@ window.addEventListener("DOMContentLoaded", () => {
     const target = document.createElement("a-sphere");
     target.setAttribute("radius", 0.3);
     target.setAttribute("color", "#FF0000");
-
     const posX = (Math.random() - 0.5) * 4;
     const posY = Math.random() * 2 + 1;
     const posZ = -3 - Math.random() * 2;
     target.setAttribute("position", `${posX} ${posY} ${posZ}`);
-
     target.setAttribute("class", "target-clickable");
-    target.setAttribute(
-      "event-set__enter",
-      "_event: mouseenter; color: #00FF00"
-    );
-    target.setAttribute(
-      "event-set__leave",
-      "_event: mouseleave; color: #FF0000"
-    );
+    target.setAttribute("event-set__enter", "_event: mouseenter; color: #00FF00");
+    target.setAttribute("event-set__leave", "_event: mouseleave; color: #FF0000");
 
     target.addEventListener("click", () => hitTarget(target));
     document.getElementById("targetContainer").appendChild(target);
-
     setTimeout(() => {
       if (target.parentNode) target.remove();
     }, 3000);
@@ -178,8 +135,6 @@ window.addEventListener("DOMContentLoaded", () => {
     score++;
     updateScoreUI();
     el.remove();
-    console.log("Target getroffen!");
-
     const popSound = document.getElementById("pop-sound");
     if (popSound) {
       popSound.currentTime = 0;
@@ -189,22 +144,15 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateScoreUI() {
-    document
-      .querySelector("#scoreText")
-      .setAttribute("value", `Treffer: ${score}`);
+    document.querySelector("#scoreText").setAttribute("value", `Treffer: ${score}`);
   }
-
   function updateTimeUI() {
-    document
-      .querySelector("#timeText")
-      .setAttribute("value", `Zeit: ${timeLeft}s`);
+    document.querySelector("#timeText").setAttribute("value", `Zeit: ${timeLeft}s`);
   }
-
   function showElement(selector) {
     const el = document.querySelector(selector);
     el.setAttribute("visible", "true");
   }
-
   function hideElement(selector) {
     const el = document.querySelector(selector);
     el.setAttribute("visible", "false");
