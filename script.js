@@ -48,6 +48,19 @@ window.addEventListener("DOMContentLoaded", () => {
     restartGame();
   });
 
+  document.querySelectorAll(".menu-clickable").forEach(el => {
+    el.addEventListener("click", (evt) => {
+      console.log("Direkter Click auf:", el.id || el.className);
+      if (el.classList.contains("portalStarry")) {
+        window.location.href = "starry.html";
+      }
+      if (el.classList.contains("portalForrest")) {
+        window.location.href = "index.html";
+      }
+    });
+  });
+
+
   // Treffer-Log fürs Target-Cursor
   targetCursor.addEventListener("click", (evt) => {
     console.log("Target-Cursor Click:", evt.target);
