@@ -32,8 +32,11 @@
     <a-entity light="type: ambient; intensity: 0.8;"></a-entity>
     <a-entity light="type: directional; intensity: 0.2;" position="2 5 -3"></a-entity>
 
-    <a-entity id="highscoreBoard" position="7 3 1.5" rotation="0 -70 0">
-      <a-box width="4" height="3" depth="0.2" color="#222" opacity="1"></a-box>
+    <a-entity id="highscoreBoard" position="7 4 1.5" rotation="0 -70 0">
+      <a-box width="4" height="3.5" depth="0.2" color="#222" opacity="1"></a-box>
+      <a-box width="4.2" height="0.4" depth="0.225" color="#444" opacity="1" position="0 -1 0.1" ></a-box>
+      <a-box width="0.3" height="2.8" depth="0.225" color="#444" opacity="1" position="0 -2.3 0.1" ></a-box>
+      <a-box width="2.2" height="0.3" depth="1.2" color="#444" opacity="1" position="0 -3.5 0.1" ></a-box>
       <a-text id="highscoreText" value="" color="white" align="center" position="0 1 0.1"></a-text>
     </a-entity>
 
@@ -61,19 +64,19 @@
 
     <!-- Menü -->
     <a-entity id="menu" position="-4 4 5" rotation="0 90 0">
-      <a-text value="Wähle Schwierigkeitsgrad:" align="center" position="0 0.5 0" color="#FFF"></a-text>
+      <a-text value="Wähle Schwierigkeitsgrad:" align="center" position="0 2.5 0" color="#FFF"></a-text>
 
-      <a-plane id="btn-easy" class="menu-clickable" color="#444" width="1.2" height="0.3" position="0 0.2 0"
+      <a-plane id="btn-easy" class="menu-clickable" color="#444" width="1.2" height="0.3" position="0 2 0"
         event-set__enter="_event: mouseenter; color: #666" event-set__leave="_event: mouseleave; color: #444">
         <a-text value="Einfach" align="center" position="0 0 0.01" color="#FFF"></a-text>
       </a-plane>
 
-      <a-plane id="btn-medium" class="menu-clickable" color="#444" width="1.2" height="0.3" position="0 -0.2 0"
+      <a-plane id="btn-medium" class="menu-clickable" color="#444" width="1.2" height="0.3" position="0 1.5 0"
         event-set__enter="_event: mouseenter; color: #666" event-set__leave="_event: mouseleave; color: #444">
         <a-text value="Mittel" align="center" position="0 0 0.01" color="#FFF"></a-text>
       </a-plane>
 
-      <a-plane id="btn-hard" class="menu-clickable" color="#444" width="1.2" height="0.3" position="0 -0.6 0"
+      <a-plane id="btn-hard" class="menu-clickable" color="#444" width="1.2" height="0.3" position="0 1.0 0"
         event-set__enter="_event: mouseenter; color: #666" event-set__leave="_event: mouseleave; color: #444">
         <a-text value="Schwer" align="center" position="0 0 0.01" color="#FFF"></a-text>
       </a-plane>
@@ -81,10 +84,10 @@
 
     <!-- Endbildschirm -->
     <a-entity id="endScreen" position="-3 3 5" rotation="0 90 0" visible="false">
-      <a-text id="endText" value="Zeit abgelaufen!" align="center" position="0 0.4 0" rotation="0 90 0"
+      <a-text id="endText" value="Zeit abgelaufen!" align="center" position="0 2.4 0" rotation="0 90 0"
         color="white"></a-text>
 
-      <a-plane id="btn-restart" class="menu-clickable" color="#444" width="1.5" height="0.4" position="0 -0.2 0"
+      <a-plane id="btn-restart" class="menu-clickable" color="#444" width="2" height="0.4" position="0 1.2 -1"
         event-set__enter="_event: mouseenter; color: #666" event-set__leave="_event: mouseleave; color: #444">
         <a-text value="Nochmal spielen" align="center" position="0 0 0.01" color="#FFF"></a-text>
       </a-plane>
