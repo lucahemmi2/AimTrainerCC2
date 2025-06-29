@@ -42,18 +42,22 @@
     <!-- Umgebung -->
     <!-- Nur EINE Environment-Entity -->
     <a-entity id="environment"
-      environment="preset: forest; ground: noise; groundColor: #444; dressingAmount: 750;"></a-entity>
+      environment="preset: forest; ground: hills; groundColor: #111; groundTexture: walkernoise;"></a-entity>
 
 
-    <a-entity light="type: ambient; intensity: 0.8;"></a-entity>
-    <a-entity light="type: directional; intensity: 0.2;" position="2 5 -3"></a-entity>
+
+    <a-entity light="type: ambient; intensity: 0.2;"></a-entity>
+    <a-entity light="type: directional; intensity: 0.2;" position="2 15 -3"></a-entity>
 
     <a-entity id="highscoreBoard" position="7 4 1.5" rotation="0 -70 0">
       <a-box width="4" height="3.5" depth="0.2" color="#222" opacity="1"></a-box>
       <a-box width="4.2" height="0.4" depth="0.225" color="#444" opacity="1" position="0 -1 0.1"></a-box>
       <a-box width="0.3" height="2.8" depth="0.225" color="#444" opacity="1" position="0 -2.3 0.1"></a-box>
       <a-box width="2.2" height="0.3" depth="1.2" color="#444" opacity="1" position="0 -3.5 0.1"></a-box>
-      <a-text id="highscoreText" value="" color="white" align="center" position="0 1 0.1"></a-text>
+      <a-text id="highscoreText" font="kelsonsans" scale="2 2 2" value="" color="white" align="center"
+        position="0 1 0.1"></a-text>
+      <a-text id="reactionText" font="kelsonsans" scale="1.5 1.5 1.5" value="" color="white" align="center"
+        position="0 0 0.1"></a-text>
     </a-entity>
 
     <a-entity id="forestObjects">
@@ -65,6 +69,7 @@
     </a-entity>
 
     <a-entity id="starryObjects" visible="false">
+
       <a-entity gltf-model="#mazda" rotation=" 3 -75 0" position="10 0 8" scale="2 2 2 "></a-entity>
       <a-entity gltf-model="#rover" rotation="-15 25 5" position="-30 1 -5"></a-entity>
       <a-entity gltf-model="#spaceship" rotation="26 80 15" position="-14 18 -15" scale="1 1 1"></a-entity>
@@ -84,6 +89,21 @@
       <a-entity gltf-model="#rover" rotation="-5 0 0" scale="0.7 0.7 0.7" position="0 0.7 40"></a-entity>
     </a-entity>
 
+    <!-- Portale -->
+
+    <a-box class="portalStarry menu-clickable" width="3" height="3" depth="0.2" src="#panelTexture" transparent="true"
+      position="0 1.5 14.25" visible="true"></a-box>
+    <a-box class="portalStarry menu-clickable" width="3" height="3" depth="0.2" src="#panelTexture" transparent="true"
+      position="0 3.5 14.25" visible="true"></a-box>
+    <a-box width="1" height="6" depth="2" color="#000" position="2 3 14.5"></a-box>
+    <a-box width="1" height="6" depth="2" color="#000" position="-2 3 14.5"></a-box>
+    <a-box width="4" height="1" depth="2" color="#000" position="0 5.5 14.5"></a-box>
+
+    <a-box class="portalForrest menu-clickable" width="3" height="3" depth="0.2" src="#panelTexture" transparent="true"
+      position="0 1.5 14.25" visible="false"></a-box>
+    <a-box class="portalForrest menu-clickable" width="3" height="3" depth="0.2" src="#panelTexture" transparent="true"
+      position="0 3.5 14.25" visible="false"></a-box>
+
 
 
     <!-- Kamera + 2 Cursorn + HUD -->
@@ -97,8 +117,8 @@
         <a-cursor id="menuCursor" fuse="false" color="#00FF00" raycaster="objects: .menu-clickable"></a-cursor>
 
         <!-- Scoreboard -->
-        <a-entity id="gun" gltf-model="#gun" position="1 -1 -1" scale="0.7 0.6 0.7" rotation="0 0 0"></a-entity>
-        <a-entity id="scoreboard" position="0 -0.3 -1" visible="false">
+        <a-entity id="gun" gltf-model="#gun" position="1 -1 -1.01" scale="0.7 0.6 0.8" rotation="0 0 0"></a-entity>
+        <a-entity id="scoreboard" rotation="0 -10 0" position="0.225 -0.35 -0.5" visible="false">
           <a-text id="scoreText" value="Treffer: 0" position="0 0.1 -1" color="white" align="center"></a-text>
           <a-text id="timeText" value="Zeit: 25s" position="0 -0.1 -1" color="white" align="center"></a-text>
           <a-plane width="1" height="0.45" color="#009900" opacity="0.25" position="0 0 -1"></a-plane>
@@ -139,16 +159,6 @@
       </a-plane>
     </a-entity>
 
-    <!-- Portale -->
-    <a-box class="portalStarry menu-clickable" width="3" height="3" depth="0.2" src="#panelTexture" transparent="true"
-      position="0 1.5 14.25" visible="true"></a-box>
-    <a-box class="portalStarry menu-clickable" width="3" height="3" depth="0.2" src="#panelTexture" transparent="true"
-      position="0 3.5 14.25" visible="true"></a-box>
-
-    <a-box class="portalForrest menu-clickable" width="3" height="3" depth="0.2" src="#panelTexture" transparent="true"
-      position="0 1.5 18.25" visible="false"></a-box>
-    <a-box class="portalForrest menu-clickable" width="3" height="3" depth="0.2" src="#panelTexture" transparent="true"
-      position="0 3.5 18.25" visible="false"></a-box>
 
     <script src="script.js"></script>
   </a-scene>
