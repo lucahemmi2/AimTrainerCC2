@@ -1,4 +1,4 @@
-const gameDuration = 5;
+const gameDuration = 25;
 let score = 0;
 let timeLeft = gameDuration;
 let spawnInterval;
