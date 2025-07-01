@@ -34,17 +34,14 @@
       <a-asset-item id="shuttle" src="assets/Space Shuttle.glb"></a-asset-item>
       <a-asset-item id="tank" src="assets/Tank.glb"></a-asset-item>
       <a-asset-item id="cat" src="assets/Cat.glb"></a-asset-item>
-      #<a-asset-item id="bear" src="assets/Black bear.glb"></a-asset-item>
+      <a-asset-item id="bear" src="assets/Black bear.glb"></a-asset-item>
     </a-assets>
 
 
 
     <!-- Umgebung -->
-    <!-- Nur EINE Environment-Entity -->
     <a-entity id="environment"
       environment="preset: forest; ground: hills; groundColor: #111; groundTexture: walkernoise;"></a-entity>
-
-
 
     <a-entity light="type: ambient; intensity: 0.2;"></a-entity>
     <a-entity light="type: directional; intensity: 0.2;" position="2 15 -3"></a-entity>
@@ -122,7 +119,7 @@
           <a-text id="scoreText" value="Treffer: 0" position="0 0.1 -1" color="white" align="center"></a-text>
           <a-text id="timeText" value="Zeit: 25s" position="0 -0.1 -1" color="white" align="center"></a-text>
           <a-plane width="1" height="0.45" color="#009900" opacity="0.25" position="0 0 -1"></a-plane>
-        </a-entity </a-camera>
+        </a-entity></a-camera>
     </a-entity>
 
     <!-- Ziel-Container -->
@@ -130,7 +127,7 @@
 
     <!-- Menü -->
     <a-entity id="menu" position="-4 4 5" rotation="0 90 0">
-      <a-text value="Wähle Schwierigkeitsgrad:" align="center" position="0 2.5 0" color="#FFF"></a-text>
+      <a-text value="Schwierigkeitsgrad:" align="center" position="0 2.5 0" color="#FFF"></a-text>
 
       <a-plane id="btn-easy" class="menu-clickable" color="#444" width="1.2" height="0.3" position="0 2 0"
         event-set__enter="_event: mouseenter; color: #666" event-set__leave="_event: mouseleave; color: #444">

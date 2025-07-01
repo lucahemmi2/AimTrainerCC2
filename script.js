@@ -6,7 +6,6 @@ let timerInterval;
 let sessionHighscore = 0;
 let reactionTimes = [];
 
-
 window.addEventListener("DOMContentLoaded", () => {
   const menuCursor = document.querySelector("#menuCursor");
   const targetCursor = document.querySelector("#targetCursor");
@@ -19,11 +18,13 @@ window.addEventListener("DOMContentLoaded", () => {
     currentMenuTarget = evt.target;
     console.log("Gaze ENTER:", currentMenuTarget.id || currentMenuTarget.className);
   });
+
   menuCursor.addEventListener("mouseleave", () => {
     console.log("Gaze LEAVE");
     currentMenuTarget = null;
   });
 
+  // Löst einen Klick aus, wenn per Touch bestätigt wird (nur wenn ein Menüelement im Fokus ist)
   window.addEventListener("touchstart", () => {
     if (currentMenuTarget) {
       console.log("Touchstart -> emit Click:", currentMenuTarget.id || currentMenuTarget.className);
@@ -31,6 +32,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Alle Menü-Buttons bekommen ihren Click-Handler
   menuButtons.forEach(el => {
     el.addEventListener("click", () => {
       console.log("Direkter Click auf:", el.id || el.className);
@@ -38,6 +40,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // Start- und Restart-Buttons initialisieren das Spiel bzw. setzen zurück
   document.querySelector("#btn-easy").addEventListener("click", () => startGame("easy"));
   document.querySelector("#btn-medium").addEventListener("click", () => startGame("medium"));
   document.querySelector("#btn-hard").addEventListener("click", () => startGame("hard"));
@@ -47,6 +50,7 @@ window.addEventListener("DOMContentLoaded", () => {
     console.log("Target-Cursor Click:", evt.target);
   });
 
+  // Prüft, welches Portal angeklickt wurde und wechselt die Umgebung
   function handleMenuClick(el) {
     if (el.classList.contains("portalStarry")) {
       switchEnvironment("starry");
@@ -56,28 +60,29 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Vordefinierte Schwierigkeitsgrade: Spawnrate, Größe, Beweglichkeit etc.
   const difficultySettings = {
     easy: {
       spawnRate: 400,
       targetRadius: 0.5,
-      spawnRange: 3, 
+      spawnRange: 3,
       move: false,
     },
     medium: {
       spawnRate: 800,
       targetRadius: 0.4,
-      spawnRange: 4,
+      spawnRange: 8,
       move: false,
     },
     hard: {
       spawnRate: 600,
-      targetRadius: 0.2,
-      spawnRange: 15, 
+      targetRadius: 0.3,
+      spawnRange: 15,
       move: true,
     }
   };
 
-
+  // Schaltet zwischen Wald- und Sternenhimmel-Umgebung inkl. Portalen und Objekten um
   function switchEnvironment(target) {
     const env = document.getElementById("environment");
     const portalsStarry = document.querySelectorAll(".portalStarry");
@@ -96,7 +101,7 @@ window.addEventListener("DOMContentLoaded", () => {
         p.classList.add("menu-clickable");
       });
 
-      // Starry Objekte AN, Forest AUS
+      // Zeigt nur Starry-Objekte an
       forestObjects.setAttribute("visible", "false");
       starryObjects.setAttribute("visible", "true");
 
@@ -111,17 +116,16 @@ window.addEventListener("DOMContentLoaded", () => {
         p.classList.remove("menu-clickable");
       });
 
-      // Starry Objekte AUS, Forest AN
+      // Zeigt nur Forest-Objekte an
       forestObjects.setAttribute("visible", "true");
       starryObjects.setAttribute("visible", "false");
     }
   }
 
-
-
+  // Startet das Spiel: setzt alles zurück, blendet Menü aus, blendet Score ein
   function startGame(difficulty) {
     reactionTimes = [];
-    currentDifficulty = difficulty;
+    currentDifficulty = difficulty; // Hinweis: wird dynamisch gesetzt
     score = 0;
     timeLeft = gameDuration;
     updateScoreUI();
@@ -136,7 +140,7 @@ window.addEventListener("DOMContentLoaded", () => {
     timerInterval = setInterval(updateTimer, 1000);
   }
 
-
+  // Zählt Spielzeit runter und beendet Spiel bei Null Sekunden
   function updateTimer() {
     timeLeft--;
     updateTimeUI();
@@ -147,11 +151,11 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Aktualisiert Highscore und Ø Reaktionszeit auf der Tafel
   function updateHighscoreUI() {
     document.querySelector("#highscoreText").setAttribute(
       "value",
       `Highscore: ${sessionHighscore}`
-
     );
 
     const avg = getAverageReactionTime().toFixed(0);
@@ -161,40 +165,42 @@ window.addEventListener("DOMContentLoaded", () => {
     );
   }
 
+  // Zeigt Endscreen, speichert Highscore, räumt alle Ziele weg
   function endGame() {
-  showElement("#scoreboard");
-  showElement("#endScreen");
+    showElement("#scoreboard");
+    showElement("#endScreen");
 
-  document.querySelector("#endText").setAttribute(
-    "value",
-    `Zeit abgelaufen!\nTreffer: ${score}\nØ Reaktionszeit: ${getAverageReactionTime().toFixed(0)} ms`
-  );
+    document.querySelector("#endText").setAttribute(
+      "value",
+      `Zeit abgelaufen!\nTreffer: ${score}\nØ Reaktionszeit: ${getAverageReactionTime().toFixed(0)} ms`
+    );
 
-  if (score > sessionHighscore) sessionHighscore = score;
+    if (score > sessionHighscore) sessionHighscore = score;
 
-  updateHighscoreUI();
-  document.getElementById("targetContainer").innerHTML = "";
-  document.getElementById("reactionTimes").innerHTML = "";
+    updateHighscoreUI();
+    document.getElementById("targetContainer").innerHTML = "";
+    document.getElementById("reactionTimes").innerHTML = "";
 
-  setTimeout(() => {
-    hideElement("#scoreboard");
-  }, 3000);
-}
+    // Blendet Scoreboard nach kurzer Zeit aus
+    setTimeout(() => {
+      hideElement("#scoreboard");
+    }, 3000);
+  }
 
-
+  // Berechnet Durchschnitt aller Reaktionszeiten in ms
   function getAverageReactionTime() {
     if (reactionTimes.length === 0) return 0;
     const sum = reactionTimes.reduce((a, b) => a + b, 0);
     return sum / reactionTimes.length;
   }
 
-
-
+  // Beendet Runde, blendet Endscreen aus und zeigt Startmenü wieder an
   function restartGame() {
     hideElement("#endScreen");
     showElement("#menu");
   }
 
+  // Spawnt ein Ziel mit Zufallsposition, optionaler Animation, Auto-Remove nach 3 Sekunden
   function spawnTarget() {
     const settings = difficultySettings[currentDifficulty];
     const target = document.createElement("a-sphere");
@@ -209,9 +215,10 @@ window.addEventListener("DOMContentLoaded", () => {
     target.setAttribute("event-set__enter", "_event: mouseenter; color: #00FF00");
     target.setAttribute("event-set__leave", "_event: mouseleave; color: #FF0000");
 
+    // Speichert Spawn-Zeitpunkt für Reaktionsmessung
     target.spawnTime = performance.now();
 
-
+    // Bewegt das Target, wenn Schwierigkeitsgrad Bewegung erlaubt
     if (settings.move) {
       const moveAxis = Math.random() < 0.2 ? 'x' : 'y';
       const moveAmount = (Math.random() * 2 + 0.5) * (Math.random() < 0.5 ? -1 : 1);
@@ -225,26 +232,29 @@ window.addEventListener("DOMContentLoaded", () => {
       }
 
       target.setAttribute("animation", `
-      property: position;
-      dir: alternate;
-      dur: ${dur};
-      loop: true;
-      to: ${toPos};
-      easing: easeInOutSine
-    `);
+        property: position;
+        dir: alternate;
+        dur: ${dur};
+        loop: true;
+        to: ${toPos};
+        easing: easeInOutSine
+      `);
     }
 
+    // Bei Treffer wird Target entfernt
     target.addEventListener("click", () => hitTarget(target));
     document.getElementById("targetContainer").appendChild(target);
+
+    // Nach 3 Sekunden automatisch entfernen
     setTimeout(() => {
       if (target.parentNode) target.remove();
     }, 3000);
   }
 
-
+  // Zählt Treffer, misst Reaktionszeit, spielt Ton, vibriert bei Treffer
   function hitTarget(el) {
     const hitTime = performance.now();
-    const reactionTime = hitTime - el.spawnTime; // in ms
+    const reactionTime = hitTime - el.spawnTime;
     reactionTimes.push(reactionTime);
     score++;
     updateScoreUI();
@@ -257,16 +267,23 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Schreibt aktuellen Score ins UI
   function updateScoreUI() {
     document.querySelector("#scoreText").setAttribute("value", `Treffer: ${score}`);
   }
+
+  // Schreibt aktuelle Restzeit ins UI
   function updateTimeUI() {
     document.querySelector("#timeText").setAttribute("value", `Zeit: ${timeLeft}s`);
   }
+
+  // Blendet ein Element ein
   function showElement(selector) {
     const el = document.querySelector(selector);
     el.setAttribute("visible", "true");
   }
+
+  // Blendet ein Element aus
   function hideElement(selector) {
     const el = document.querySelector(selector);
     el.setAttribute("visible", "false");
